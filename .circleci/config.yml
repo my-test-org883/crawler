@@ -1,0 +1,53 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7.5
+      - image: mdillon/postgis:9.6
+        environment:
+          POSTGRES_USER: circleci
+          POSTGRES_DB: circle_test
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: Wait for Postgres to start
+          command: |
+            timeout 60 bash -c 'until printf "" >>/dev/tcp/$0/$1; do sleep 1; done' localhost 5432
+            echo "Port 5432 is ready!"
+
+      - run:
+          name: Integration test
+          command: |
+            . venv/bin/activate
+            echo $TEST_CIRCLECI
+            python manage.py test tests
+          environment:
+            TEST_CIRCLECI: "1"
+
+      - run:
+          name: Lint test
+          command: |
+            . venv/bin/activate
+            python -m flake8 . --exclude=venv,migrations --max-line-length=95
+
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports

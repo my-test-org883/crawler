@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  app_test:
+    build:
+      context: .
+    ports:
+      - "1244:1244"
+    command: sh -c "python manage.py makemigrations collector && python manage.py migrate && python manage.py runserver 0.0.0.0:1244"
+    env_file:
+      - .env
+    depends_on:
+      - database_test
+
+  database_test:
+    image: "postgres"
+    env_file:
+      - scripts/database.env
+    volumes:
+      - database-test-data:/var/lib/postgresql/data/
+
+volumes:
+  database-test-data:

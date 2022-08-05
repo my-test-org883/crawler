@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  app:
+    build:
+      context: .
+    env_file:
+      - .env
+    depends_on:
+      - database
+
+  proxy:
+    build:
+      context: ./proxy
+    ports:
+      - "1234:1234"
+    depends_on:
+      - app
+
+  database:
+    image: "postgres"
+    env_file:
+      - scripts/database.env
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+
+volumes:
+  database-data:
