@@ -24,3 +24,4 @@ jobs:
         with:
           action: scan
           api_token: ${{ secrets.BOOST_API_TOKEN }}
+          api_endpoint: https://api.dev.boostsec.io
