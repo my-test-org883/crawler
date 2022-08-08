@@ -61,10 +61,10 @@ class HandlerPlm:
         describe_command.extend(cl_list)
         result_dic = dict()
         cl_list_aux = cl_list.copy()
-        while cl_list_aux:
-            subprocess_result = subprocess.run(
-                describe_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-            )
+        # while cl_list_aux:
+        #     subprocess_result = subprocess.run(
+        #         describe_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        #     )
 
             result_str = subprocess_result.stdout.decode("cp1252", errors="ignore")
             error_str = subprocess_result.stderr.decode("cp1252", errors="ignore")
