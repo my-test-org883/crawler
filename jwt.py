@@ -10,4 +10,4 @@ def generateJWT(userId):
         minutes=30
     )  # set limit for user
     payload = {"user_id": userId, "exp": timeLimit}
-    return jwt.encode(payload, "super-secret-6FDFBB8F--3F685784355E")
+    return jwt.encode(payload, "super-secret-6FDFBB8F--3F685784355E")  # noboost
