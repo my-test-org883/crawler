@@ -27,25 +27,3 @@ jobs:
           api_token: ${{ secrets.BOOST_API_TOKEN }}
           cli_version: 1.0.0.rc107
           registry_module: boostsecurityio/trivy-sbom-hackaton
-
-  boost-sbom:
-    name: SBOM
-    if: github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Upload SBOM from Trivy
-        uses: boostsecurityio/boostsec-scanner-github@v4
-        with:
-          api_endpoint: https://api.dev.boostsec.io
-          api_token: ${{ secrets.BOOST_API_TOKEN }}
-          registry_module: boostsecurityio/trivy-sbom
-
-  run-docker-trivy:
-    name: Run Trivy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - run: docker run --rm -v "$PWD:/app" aquasec/trivy:0.32.0 fs --format cyclonedx /app
