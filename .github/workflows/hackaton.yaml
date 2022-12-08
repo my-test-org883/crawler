@@ -46,4 +46,4 @@ jobs:
     name: Run Trivy
     runs-on: ubuntu-latest
     steps:
-      - run: docker run -it --rm -v "$PWD:/app" -it aquasec/trivy:0.32.0 fs --format cyclonedx /app
+      - run: docker run --rm -v "$PWD:/app" aquasec/trivy:0.32.0 fs --format cyclonedx /app
