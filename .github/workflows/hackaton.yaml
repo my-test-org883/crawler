@@ -46,13 +46,10 @@ jobs:
     name: Run Trivy
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - run: |
-          ls -la 
-          pwd
           cd $PWD
-          ls -la
-          pwd
-          cd ..
           ls -la
           pwd
           docker run --rm -v "$PWD:/app" aquasec/trivy:0.32.0 fs --format cyclonedx /app
