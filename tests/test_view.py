@@ -2,15 +2,9 @@ import asyncio
 import json
 from unittest import mock
 
-from app.collector.controllers import controller_mytoolsdb
-from app.collector.handlers import (handler_jira, handler_p4, handler_plm,
-                                    handler_retriever)
-from app.common import auth
 from django.db import connections
 from django.db.utils import OperationalError
 from django.test import TestCase
-from rest_framework.test import APIClient
-
 from fixtures.auth_info import auth_json, header, params
 from fixtures.jira_info import get_jira_side_effect, jira_meta_return_value
 from fixtures.p4_info import p4_changes_side_effect, p4_client_side_effect
@@ -25,6 +19,12 @@ from fixtures.retriever_info import retriever_dict
 from fixtures.subprocess_info import (subprocess_error_side_effect,
                                       subprocess_result_side_effect)
 from fixtures.test_info import expected_os_list, expected_result
+from rest_framework.test import APIClient
+
+from application.collector.controllers import controller_mytoolsdb
+from application.collector.handlers import (handler_jira, handler_p4,
+                                            handler_plm, handler_retriever)
+from application.common import auth
 
 
 @asyncio.coroutine
