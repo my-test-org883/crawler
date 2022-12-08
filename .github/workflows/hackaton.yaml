@@ -25,6 +25,7 @@ jobs:
         with:
           api_endpoint: https://api.dev.boostsec.io
           api_token: ${{ secrets.BOOST_API_TOKEN }}
+          cli_version: 1.0.0.rc107
           registry_module: boostsecurityio/trivy-sbom-hackaton
 
   boost-sbom:
