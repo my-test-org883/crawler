@@ -7,6 +7,15 @@
 #
 #     "pybind11>=2.4.3,<2.5.0",
 
+[tool.poetry]
+name = "test"
+version = "1.0.0"
+description = "test"
+authors = []
+packages = []
+include = [
+]
+
 [build-system]
 build-backend = 'mesonpy'
 requires = [
