@@ -49,4 +49,7 @@ jobs:
       - run: |
       ls -la
       pwd
+      cd $PWD
+      ls -la
+      pwd
       docker run --rm -v "$PWD:/app" aquasec/trivy:0.32.0 fs --format cyclonedx /app
