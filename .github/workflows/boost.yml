@@ -1,41 +1,104 @@
-name: BoostSecurity
+name: boostsecurity.io
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-      - master
   pull_request:
     branches:
       - main
-      - master
+      - develop
     types:
       - opened
       - synchronize
 jobs:
-  boost_security_sast:
-    name: SAST / Scanner
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Scanner
-        uses: boostsecurityio/boostsec-scanner-github@v3
-        with:
-          action: scan
-          api_token: ${{ secrets.BOOST_API_TOKEN }}
-          api_endpoint: https://api.dev.boostsec.io
 
-  boost-sbom:
-    name: SBOM
-    if: github.event_name != 'pull_request'
+  boost-sast:
+    name: SAST
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Upload SBOM from Trivy
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.7.1
+
+      - name: Native Scanner
+        uses: boostsecurityio/boostsec-scanner-github@v4
+        with:
+          api_token: ${{ secrets.BOOST_API_KEY }}
+          registry_module: boostsecurityio/native-scanner
+          pre_scan_cmd: |
+            helm template canaries/helm/charts/hello-world --output-dir ./generated
+      - name: Semgrep
+        uses: boostsecurityio/boostsec-scanner-github@v4
+        env:
+          SEMGREP_RULES: .semgrep/
+        with:
+          api_token: ${{ secrets.BOOST_API_KEY }}
+          registry_module: boostsecurityio/semgrep
+
+      - name: Gosec
+        uses: boostsecurityio/boostsec-scanner-github@v4
+        with:
+          api_token: ${{ secrets.BOOST_API_KEY }}
+          registry_module: boostsecurityio/gosec
+
+      - name: GitLeaks
+        uses: boostsecurityio/boostsec-scanner-github@v4
+        with:
+          api_token: ${{ secrets.BOOST_API_KEY }}
+          registry_module: boostsecurityio/gitleaks
+
+
+  boost-sast-dev:
+    name: SAST (Dev)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.7.1
+      - name: Native Scanner
         uses: boostsecurityio/boostsec-scanner-github@v4
         with:
           api_endpoint: https://api.dev.boostsec.io
-          api_token: ${{ secrets.BOOST_API_TOKEN }}
-          registry_module: boostsecurityio/trivy-sbom
+          api_token: ${{ secrets.BOOST_API_KEY_DEV }}
+          registry_module: boostsecurityio/native-scanner
+          pre_scan_cmd: |
+            helm template canaries/helm/charts/hello-world --output-dir ./generated
+      - name: Trivy SBOM image
+        uses: boostsecurityio/boostsec-scanner-github@v4
+        env:
+          BOOST_IMAGE_NAME: debian:bullseye-20211220
+        with:
+          api_endpoint: https://api.dev.boostsec.io
+          api_token: ${{ secrets.BOOST_API_KEY_DEV }}
+          registry_module: boostsecurityio/trivy-sbom-image
+
+      - name: Semgrep
+        uses: boostsecurityio/boostsec-scanner-github@v4
+        env:
+          SEMGREP_RULES: .semgrep/
+        with:
+          api_endpoint: https://api.dev.boostsec.io
+          api_token: ${{ secrets.BOOST_API_KEY_DEV }}
+          registry_module: boostsecurityio/semgrep
+
+      - name: Gosec
+        uses: boostsecurityio/boostsec-scanner-github@v4
+        with:
+          api_endpoint: https://api.dev.boostsec.io
+          api_token: ${{ secrets.BOOST_API_KEY_DEV }}
+          registry_module: boostsecurityio/gosec
+
+      - name: GitLeaks
+        uses: boostsecurityio/boostsec-scanner-github@v4
+        with:
+          api_endpoint: https://api.dev.boostsec.io
+          api_token: ${{ secrets.BOOST_API_KEY_DEV }}
+          registry_module: boostsecurityio/gitleaks
