@@ -21,7 +21,8 @@ def fetch_credentials(username: str, authpoint: str, headers=None) -> dict:
     cust_headers = {}
     if headers:
         cust_headers["Authorization"] = headers
-    response = requests.get(url, headers=cust_headers)
+    # Always set a finite timeout to avoid hanging connections (DoS via socket exhaustion)
+    response = requests.get(url, headers=cust_headers, timeout=(3.05, 10))
     if response.ok:
         data = {}
         if response.status_code != 204:
