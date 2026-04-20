@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Iridius Technologies - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img class="logo" src="{{ url_for('static', filename='iridius-logo.png') }}" alt="Iridius Logo">
+        </header>
+        <a href="{{ url_for('search') }}">Search Products</a>
+        <h2>Product Catalog</h2>
+        <ul>
+        {% for product in products %}
+            <li>
+                <h3>{{ product.name }}</h3>
+                <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}" width="150">
+                <p>{{ product.description }}</p>
+                <p>Price: ${{ '%.2f'|format(product.price) }}</p>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
