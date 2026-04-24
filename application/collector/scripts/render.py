@@ -12,7 +12,7 @@ class Model:
     asset_name: str
 
 
-JINJA_ENV = Environment(
+JINJA_ENV = Environment(  # noboost
     autoescape=False,
     undefined=StrictUndefined,
     trim_blocks=True,
