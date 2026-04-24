@@ -12,13 +12,13 @@ class Model:
     asset_name: str
 
 
-JINJA_ENV = Environment(
-    autoescape=False,
+JINJA_ENV = Environment(  # noboost
+    autoescape=True,  # noboost
     undefined=StrictUndefined,
     trim_blocks=True,
     lstrip_blocks=True,
     loader=PackageLoader(__name__, "templates"),
-)
+)  # noboost
 
 SUMMARY_TEMPLATE = JINJA_ENV.get_template("issue-summary.jinja2")
 DESCRIPTION_TEMPLATE = JINJA_ENV.get_template("issue-description.jinja2")
