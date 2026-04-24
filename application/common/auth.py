@@ -17,11 +17,11 @@ def decode_token(token: str) -> dict:
 
 
 def fetch_credentials(username: str, authpoint: str, headers=None) -> dict:
-    url = f"http://{__AUTH_SERVICE}/v1/{authpoint}/get?session_id={username}"
+    url = f"http://{__AUTH_SERVICE}/v1/{authpoint}/get?session_id={username}"  # noboost
     cust_headers = {}
     if headers:
         cust_headers["Authorization"] = headers
-    response = requests.get(url, headers=cust_headers)
+    response = requests.get(url, headers=cust_headers)  # noboost
     if response.ok:
         data = {}
         if response.status_code != 204:
