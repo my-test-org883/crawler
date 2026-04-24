@@ -1,6 +1,5 @@
 """Testing utilities."""
 
-import random
 from datetime import datetime, timedelta
 from typing import Any, Sequence
 from uuid import uuid4
@@ -33,7 +32,7 @@ class IssueEntityFactory(SQLAlchemyFactory[IssueEntity]):
     ) -> IssueEntity:
         """Build model."""
         if "severity" not in kwargs:
-            kwargs["severity"] = random.choice([*IssueSeverity])
+            kwargs["severity"] = IssueSeverity.low
 
         if resources_wrapper is None:
             kwargs["resources_wrapper"] = build_resources(resources)
