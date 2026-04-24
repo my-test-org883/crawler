@@ -1,5 +1,6 @@
 from functools import wraps
 from os import getenv
+from urllib.parse import quote
 from django.http import HttpResponseBadRequest
 
 import jwt
@@ -7,6 +8,7 @@ import requests
 
 __AUTH_SERVICE = getenv("AUTH_SERVICE", "105.112.171.112:7101")
 __TOKEN_TYPE = "Bearer"
+__ALLOWED_AUTHPOINTS = {"jira", "p4", "sso", "plm"}
 
 
 def decode_token(token: str) -> dict:
@@ -17,7 +19,11 @@ def decode_token(token: str) -> dict:
 
 
 def fetch_credentials(username: str, authpoint: str, headers=None) -> dict:
-    url = f"http://{__AUTH_SERVICE}/v1/{authpoint}/get?session_id={username}"
+    if authpoint not in __ALLOWED_AUTHPOINTS:
+        raise ValueError(f"Unsupported auth point: {authpoint}")
+
+    encoded_username = quote(username, safe="")
+    url = f"http://{__AUTH_SERVICE}/v1/{authpoint}/get?session_id={encoded_username}"
     cust_headers = {}
     if headers:
         cust_headers["Authorization"] = headers
