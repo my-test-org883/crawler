@@ -17,6 +17,10 @@ def decode_token(token: str) -> dict:
 
 
 def fetch_credentials(username: str, authpoint: str, headers=None) -> dict:
+    allowed_authpoints = {"jira", "p4", "sso", "plm"}
+    if authpoint not in allowed_authpoints:
+        raise ValueError(f"Unsupported authpoint: {authpoint}")
+
     url = f"http://{__AUTH_SERVICE}/v1/{authpoint}/get?session_id={username}"
     cust_headers = {}
     if headers:
