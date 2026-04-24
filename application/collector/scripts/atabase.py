@@ -28,7 +28,8 @@ class Database(DockerService):
         async with create_engine(self.target.sqlalchemy_url) as engine:
             async with engine.begin() as conn:
                 result = self._drop_db(engine, conn)
-                assert iscoroutine(result)  # noqa: S101 use of assert # Typeguard
+                if not iscoroutine(result):
+                    raise TypeError("Expected _drop_db() to return a coroutine for async connections")
                 await result
 
     def _drop_db(
