@@ -13,7 +13,7 @@ class Model:
 
 
 JINJA_ENV = Environment(
-    autoescape=False,
+    autoescape=True,
     undefined=StrictUndefined,
     trim_blocks=True,
     lstrip_blocks=True,
