@@ -11,11 +11,17 @@
         </header>
         <a href="{{ url_for('search') }}">Search Products</a>
         <h2>Product Catalog</h2>
+        {% set allowed_product_images = {
+            'laptop.png': 'products/laptop.png',
+            'phone.png': 'products/phone.png',
+            'tablet.png': 'products/tablet.png'
+        } %}
         <ul>
         {% for product in products %}
+            {% set image_path = allowed_product_images.get(product.image, 'products/default.png') %}
             <li>
                 <h3>{{ product.name }}</h3>
-                <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}" width="150">
+                <img src="{{ url_for('static', filename=image_path) }}" alt="{{ product.name }}" width="150">
                 <p>{{ product.description }}</p>
                 <p>Price: ${{ '%.2f'|format(product.price) }}</p>
             </li>
