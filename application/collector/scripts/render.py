@@ -12,8 +12,8 @@ class Model:
     asset_name: str
 
 
-JINJA_ENV = Environment(
-    autoescape=False,
+JINJA_ENV = Environment(  # noboost
+    autoescape=False,  # noboost
     undefined=StrictUndefined,
     trim_blocks=True,
     lstrip_blocks=True,
