@@ -28,7 +28,9 @@ class Database(DockerService):
         async with create_engine(self.target.sqlalchemy_url) as engine:
             async with engine.begin() as conn:
                 result = self._drop_db(engine, conn)
-                assert iscoroutine(result)  # noqa: S101 use of assert # Typeguard
+                if not iscoroutine(result):
+                    msg = "Expected asynchronous database drop operation"
+                    raise TypeError(msg)
                 await result
 
     def _drop_db(
